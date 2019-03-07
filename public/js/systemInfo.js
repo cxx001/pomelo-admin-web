@@ -328,6 +328,7 @@ Ext.onReady(function() {
 
 var refresh = function() {
 	window.parent.client.request('systemInfo', null, function(err, msg) {
+		console.log(msg);
 		if (err) {
 			console.error('fail to request system info:');
 			console.error(err);

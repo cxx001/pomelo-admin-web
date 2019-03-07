@@ -43,7 +43,7 @@ Ext.onReady(function(){
 	});
 });
 
-var STATUS_INTERVAL = 5 * 1000; // 60 seconds
+var STATUS_INTERVAL = 60 * 1000; // 60 seconds
 /*
 socket.on('connect', function(){
 	socket.emit('announce_web_client');
@@ -68,18 +68,21 @@ setInterval(function() {
 		}
 
 		var totalConnCount = 0, loginedCount = 0, info, list = [];
-		for(var sid in msg) {
-			info = msg[sid];
-			totalConnCount += msg[sid].totalConnCount;
-			loginedCount += msg[sid].loginedCount;
-			var lists = msg[sid].loginedList;
+		var msg2=msg.body;
+		if (!msg2)
+			return;
+		for(var sid in msg2) {
+			info = msg2[sid];
+			totalConnCount += msg2[sid].totalConnCount;
+			loginedCount += msg2[sid].loginedCount;
+			var lists = msg2[sid].loginedList;
 			for(var i=0;i<lists.length;i++){
 				list.push({
 					address : lists[i].address,
 					serverId : sid,
 					username : lists[i].username,
-					loginTime : new Date(lists[i].loginTime),
-					uid : lists[i].uid
+					loginTime : new Date(parseInt(lists[i].loginTime)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " "),
+                uid : lists[i].uid
 				});
 			}
 		}	

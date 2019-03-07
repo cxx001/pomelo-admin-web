@@ -21,14 +21,13 @@
 
 Client.prototype = {
 	connect: function(id, host, port, cb) {
+		console.log('connect server')
 		this.id = id;
 		var self = this;
-		this.socket = io.connect('http://' + host + ':' + port, {
-			'force new connection': true,
-			'reconnect': false
-		});
+		this.socket = io('http://' + host + ':' + port);
 
 		this.socket.on('connect', function() {
+			console.log('connect')
 			self.state = Client.ST_CONNECTED;
 			self.socket.emit('register', {
 				type: "client",
@@ -40,6 +39,7 @@ Client.prototype = {
 		});
 
 		this.socket.on('register', function(res) {
+			console.log('register')
 			if (res.code !== protocol.PRO_OK) {
 				cb(res.msg);
 				return;
@@ -50,6 +50,7 @@ Client.prototype = {
 		});
 
 		this.socket.on('client', function(msg) {
+			console.log('client: msg:'+msg);
 			msg = protocol.parse(msg);
 			if (msg.respId) {
 				// response for request
@@ -65,6 +66,7 @@ Client.prototype = {
 		});
 
 		this.socket.on('error', function(err) {
+			console.log("error: " +err);
 			if (self.state < Client.ST_CONNECTED) {
 				cb(err);
 			}
@@ -73,6 +75,7 @@ Client.prototype = {
 		});
 
 		this.socket.on('disconnect', function(reason) {
+			console.log('disconnect');
 			this.state = Client.ST_CLOSED;
 			self.emit('close');
 		});
