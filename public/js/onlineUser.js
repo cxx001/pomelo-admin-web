@@ -68,7 +68,7 @@ setInterval(function() {
 		}
 
 		var totalConnCount = 0, loginedCount = 0, info, list = [];
-		var msg2=msg.body;
+		var msg2=msg;
 		if (!msg2)
 			return;
 		for(var sid in msg2) {
