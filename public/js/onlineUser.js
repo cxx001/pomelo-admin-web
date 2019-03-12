@@ -41,6 +41,8 @@ Ext.onReady(function(){
 			contentEl:onlineUsersInfo
 		}, userGrid]
 	});
+
+	refresh();
 });
 
 var STATUS_INTERVAL = 60 * 1000; // 60 seconds
@@ -60,6 +62,10 @@ socket.on('connect', function(){
 });*/
 
 setInterval(function() {
+	refresh();
+}, STATUS_INTERVAL);
+
+function refresh() {
 	window.parent.client.request('onlineUser', null, function(err, msg) {
 		if(err) {
 			console.error('fail to request online user:');
@@ -68,7 +74,7 @@ setInterval(function() {
 		}
 
 		var totalConnCount = 0, loginedCount = 0, info, list = [];
-		var msg2=msg;
+		var msg2=msg.body;
 		if (!msg2)
 			return;
 		for(var sid in msg2) {
@@ -93,7 +99,7 @@ setInterval(function() {
 		console.log(list);
 		store.loadData(list);
 	});
-}, STATUS_INTERVAL);
+}
 
 function contentUpdate(totalConnCount, loginedCount){
 	document.getElementById("totalConnCount").innerHTML = totalConnCount;
