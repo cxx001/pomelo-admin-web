@@ -76,7 +76,8 @@ npm install --save  pomelo-admin
 #### 经过测试onlineUser里面的address能获取websocket协议服务器的用户ip，而socke.io协议的不能；另外，其他的如systemInfo等由pomelo-admin提供的module windows系统不能获取信息，linux系统可以。
 
 
-## 流程记录
+### 流程记录
+# 连接master服务器(app.js <--> master)
 1.const adminClient = new admin.adminClient({
     username:config.username,
     password:config.password
@@ -85,6 +86,19 @@ npm install --save  pomelo-admin
 2.adminClient.connect('pomelo-web-1',config.host,config.port,function(err){
 })
 
-3.socket.on('client',function(req){
-	adminClient.request(req.moduleId,req.body,function(err,data,msg){})
-})
+# 访问web服务器(views.index.html <--> app.js / client.js)
+1.var client = window.client = new ConsoleClient({
+	username: username,
+	password: password,
+	md5: false
+});
+
+2.client.connect('browser-----' + Date.now(), host, port, function(err){
+});
+
+3.io.on('connection', function (socket) {
+    socket.emit('connect', { hello: 'world' });
+    socket.on('client',function(req){
+        adminClient.request(req.moduleId,req.body,function(err,data,msg){})
+    })
+});
