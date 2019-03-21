@@ -88,7 +88,7 @@ function refresh() {
 					serverId : sid,
 					username : lists[i].username,
 					loginTime : new Date(parseInt(lists[i].loginTime)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " "),
-                uid : lists[i].uid
+                	uid : lists[i].uid
 				});
 			}
 		}	
